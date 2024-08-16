@@ -139,7 +139,7 @@ floatfield<N,M> operator*(Nabla<2> n, const Vec3field<N,M>& f){
 
     for(int i=1;i<N-1;++i){
         for(int j=1;j<M-1;++j){
-            res.F[i+j*N] = (f.f[i+1+j*N].a[0]-f.f[i-1+j*N].a[0])+(f.f[i+(j+1)*N].a[1]-f.f[i+(j-1)*N].a[1]);
+            res.f[i+j*N] = (f.F[i+1+j*N].a[0]-f.F[i-1+j*N].a[0])/2+(f.F[i+(j+1)*N].a[1]-f.F[i+(j-1)*N].a[1])/2;
         }
     }
     return res;

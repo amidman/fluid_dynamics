@@ -133,6 +133,25 @@ TEST(Nabla_tests, gradient) {
   EXPECT_EQ(grad.F[94].a[1], 0);
 }
 
+TEST(Nabla_tests, div) {
+  Vec3field<10, 10> F;
+
+  for (int i = 0; i < 10; i++) {
+    for (int j = 0; j < 10; j++) {
+      F.F[i + j * 10].a[0] = i + j;
+      F.F[i + j * 10].a[1] = i + j;
+      F.F[i + j * 10].a[2] = i + j;
+    }
+  }
+
+  Nabla n;
+
+  floatfield grad = n * F;
+
+  EXPECT_EQ(grad.f[11], 2);
+  EXPECT_EQ(grad.f[55], 2);
+}
+
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
