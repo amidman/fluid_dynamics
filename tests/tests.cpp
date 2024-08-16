@@ -2,8 +2,8 @@
 #include <fstream>
 #include <iostream>
 
-#include "types.h"
-#include "solver.h"
+#include "../src/types.h"
+#include "../src/solver.h"
 #include "gtest/gtest.h"
 
 TEST(type_tests, floatfield) {
