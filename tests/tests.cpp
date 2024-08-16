@@ -14,6 +14,88 @@ TEST(type_tests, Vec3_indices_access) {
 
 }
 
+
+TEST(type_tests, vec3_sum){
+    Vec3 a;
+    a[0] = 1;
+    a[1] = 2;
+    a[2] = 3;
+
+    Vec3 b;
+    b[0] = 4;
+    b[1] = 5;
+    b[2] = 6;
+
+    Vec3 res = a+b;
+
+    EXPECT_EQ(res[0],5);
+    EXPECT_EQ(res[1],7);
+    EXPECT_EQ(res[2],9);
+}
+
+TEST(type_tests, vec3_substract){
+    Vec3 a;
+    a[0] = 1;
+    a[1] = 2;
+    a[2] = 3;
+
+    Vec3 b;
+    b[0] = 4;
+    b[1] = 5;
+    b[2] = 6;
+
+    Vec3 res = b-a;
+
+    EXPECT_EQ(res[0],3);
+    EXPECT_EQ(res[1],3);
+    EXPECT_EQ(res[2],3);
+}
+
+TEST(type_tests, vec3_mult_double){
+    Vec3 a;
+    a[0] = 1;
+    a[1] = 2;
+    a[2] = 3;
+
+    double b = 2;
+
+    Vec3 res = a*b;
+
+    EXPECT_EQ(res[0],2);
+    EXPECT_EQ(res[1],4);
+    EXPECT_EQ(res[2],6);
+}
+
+TEST(type_tests, double_mult_vec3){
+    Vec3 a;
+    a[0] = 1;
+    a[1] = 2;
+    a[2] = 3;
+
+    double b = 2;
+
+    Vec3 res = b*a;
+
+    EXPECT_EQ(res[0],2);
+    EXPECT_EQ(res[1],4);
+    EXPECT_EQ(res[2],6);
+}
+
+TEST(type_tests, vec3_div_double){
+    Vec3 a;
+    a[0] = 10;
+    a[1] = 12;
+    a[2] = 14;
+
+    double b = 2;
+
+    Vec3 res = a/b;
+
+    EXPECT_EQ(res[0],5);
+    EXPECT_EQ(res[1],6);
+    EXPECT_EQ(res[2],7);
+}
+
 TEST(type_tests, floatfield) {
     floatfield<10, 10> F;
     for (int i = 0; i < 100; i++) {
@@ -100,6 +182,34 @@ TEST(type_tests, Vec3field_sum) {
     EXPECT_EQ(F.F[5].a[1], 12);
     EXPECT_EQ(F.F[5].a[2], 14);
 }
+
+
+TEST(type_tests, Vec3field_mult_Vec3field) {
+    Vec3field<10, 10> A;
+    for (int i = 0; i < 100; i++) {
+        A.F[i].a[0] = i + 0;
+        A.F[i].a[1] = i + 1;
+        A.F[i].a[2] = i + 2;
+    }
+
+    Vec3field<10, 10> B;
+    for (int i = 0; i < 100; i++) {
+        B.F[i].a[0] = i + 0;
+        B.F[i].a[1] = i + 1;
+        B.F[i].a[2] = i + 2;
+    }
+
+    Vec3field<10, 10> F = A * B;
+
+    EXPECT_EQ(F.F[0].a[0], 0);
+    EXPECT_EQ(F.F[0].a[1], 1);
+    EXPECT_EQ(F.F[0].a[2], 4);
+
+    EXPECT_EQ(F.F[5].a[0], 25);
+    EXPECT_EQ(F.F[5].a[1], 36);
+    EXPECT_EQ(F.F[5].a[2], 49);
+}
+
 
 TEST(type_tests, Vec3field_mult_float) {
     Vec3field<10, 10> A;
