@@ -2,6 +2,10 @@
 
 struct Vec3 {
     double a[3] = {0};
+
+    double& operator[](int i){
+        return a[i];
+    }
 };
 
 Vec3 operator+(const Vec3 &a, const Vec3 &b) {

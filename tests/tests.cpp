@@ -6,6 +6,14 @@
 #include "../src/types.h"
 #include "gtest/gtest.h"
 
+TEST(type_tests, Vec3_indices_access) {
+    Vec3 a;
+    a[0] = 1;
+    a[1] = 1;
+    a[2] = 1;
+
+}
+
 TEST(type_tests, floatfield) {
     floatfield<10, 10> F;
     for (int i = 0; i < 100; i++) {
