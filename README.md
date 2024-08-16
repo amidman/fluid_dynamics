@@ -18,5 +18,5 @@ cd build && ctest
 ### To format source code:
 You need install [clang-format](https://clang.llvm.org/docs/ClangFormat.html)
 ```bash
-clang-format -style=file:.clang-format -i src/*.cpp src/*.h
+clang-format -style=file:.clang-format -i src/*.cpp src/*.h tests/*.cpp 
 ```
