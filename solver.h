@@ -1,5 +1,4 @@
 #include"types.h"
-#include"lin_op.h"
 
 class Solver{
     public:
