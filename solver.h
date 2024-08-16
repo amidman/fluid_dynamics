@@ -1,32 +1,26 @@
-#include"types.h"
+#include "types.h"
 
-class Solver{
-    public:
+template <int N, int M> class Solver {
+public:
+  Vec3field<N, M> V_old;
+  floatfield<N, M> P_old;
+  floatfield<N, M> ro_old;
 
-    Vec3field* V_old;
-    floatfield* P_old;
-    floatfield* ro_old;
+  Vec3field<N, M> V_new;
+  floatfield<N, M> P_new;
+  floatfield<N, M> ro_new;
 
-    Vec3field* V_new;
-    floatfield* P_new;
-    floatfield* ro_new;
+  Solver() {}
 
-    int N;
-    int M;
+  void solve_step() {
+    Nabla nabla;
+    Laplassian lap;
+    x_Nabla_x x_n_x;
 
-    Solver(int N, int M){
-        this.N = N;
-        this.M = M;
+    float tau = 1e-6;
+    float nu = 1e-6;
+    float eta = 1e-9;
 
-        V_old = new Vec3field(N,M);
-        V_new = new Vec3field(N,M);
-
-        P_old = new floatfield(N,M);
-        P_new = new floatfield(N,M);
-
-        ro_old = new floatfield(N,M);
-        ro_new = new floatfield(N,M);
-    }
-
-    
+    V_new = V_old + (lap * V_old * nu + nabla * (nabla * V_old) * (eta + nu/3) - nabla * P_old - x_n_x*V_old) * tau;
+  }
 };

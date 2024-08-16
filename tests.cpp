@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "types.h"
+#include "solver.h"
 #include "gtest/gtest.h"
 
 TEST(type_tests, floatfield) {
@@ -150,6 +151,29 @@ TEST(Nabla_tests, div) {
 
   EXPECT_EQ(grad.f[11], 2);
   EXPECT_EQ(grad.f[55], 2);
+}
+
+TEST(Laplassian_tests, laplassian) {
+  Vec3field<10, 10> F;
+
+  for (int i = 0; i < 10; i++) {
+    for (int j = 0; j < 10; j++) {
+      F.F[i + j * 10].a[0] = i + j;
+      F.F[i + j * 10].a[1] = i + j;
+      F.F[i + j * 10].a[2] = i + j;
+    }
+  }
+
+  Laplassian L;
+
+  Vec3field lap = L * F;
+
+  EXPECT_EQ(lap.F[11].a[0], 0);
+  EXPECT_EQ(lap.F[11].a[1], 0);
+
+  EXPECT_EQ(lap.F[55].a[0], 0);
+  EXPECT_EQ(lap.F[55].a[1], 0);
+
 }
 
 int main(int argc, char **argv) {
