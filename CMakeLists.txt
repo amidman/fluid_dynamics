@@ -27,7 +27,7 @@ enable_testing()
 
 add_executable(
 	tests
-	src/tests.cpp
+	tests/tests.cpp
 )
 target_link_libraries(
 	tests
