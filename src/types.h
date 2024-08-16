@@ -54,15 +54,15 @@ template <int N, int M> struct Vec3field {
     Vec3 operator[](int idx) const { return F[idx]; }
 };
 
-template <int N, int M> struct floatfield {
-    float f[N * M];
+template <int N, int M> struct doublefield {
+    double f[N * M];
 
-    float &operator[](int idx) { return f[idx]; }
-    float operator[](int idx) const { return f[idx]; }
+    double &operator[](int idx) { return f[idx]; }
+    double operator[](int idx) const { return f[idx]; }
 };
 
-template <int N, int M> floatfield<N, M> operator*(float f, const floatfield<N, M> &a) {
-    floatfield<N, M> res;
+template <int N, int M> doublefield<N, M> operator*(double f, const doublefield<N, M> &a) {
+    doublefield<N, M> res;
 
     for (int i = 0; i < N * M; ++i) {
         res[i] = a[i] * f;
@@ -71,8 +71,8 @@ template <int N, int M> floatfield<N, M> operator*(float f, const floatfield<N, 
     return res;
 }
 
-template <int N, int M> floatfield<N, M> operator*(const floatfield<N, M> &a, float f) {
-    floatfield<N, M> res;
+template <int N, int M> doublefield<N, M> operator*(const doublefield<N, M> &a, double f) {
+    doublefield<N, M> res;
 
     for (int i = 0; i < N * M; ++i) {
         res[i] = a[i] * f;
@@ -81,8 +81,8 @@ template <int N, int M> floatfield<N, M> operator*(const floatfield<N, M> &a, fl
     return res;
 }
 
-template <int N, int M> floatfield<N, M> operator+(const floatfield<N, M> &a, const floatfield<N, M> &b) {
-    floatfield<N, M> res;
+template <int N, int M> doublefield<N, M> operator+(const doublefield<N, M> &a, const doublefield<N, M> &b) {
+    doublefield<N, M> res;
 
     for (int i = 0; i < N * M; ++i) {
         res[i] = a[i] + b[i];
@@ -102,7 +102,7 @@ template <int N, int M> Vec3field<N, M> operator*(const Vec3field<N, M> &A, cons
     return res;
 }
 
-template <int N, int M> Vec3field<N, M> operator*(float f, const Vec3field<N, M> &a) {
+template <int N, int M> Vec3field<N, M> operator*(double f, const Vec3field<N, M> &a) {
     Vec3field<N, M> res;
 
     for (int i = 0; i < N * M; ++i) {
@@ -112,7 +112,7 @@ template <int N, int M> Vec3field<N, M> operator*(float f, const Vec3field<N, M>
     return res;
 }
 
-template <int N, int M> Vec3field<N, M> operator*(const Vec3field<N, M> &a, float f) {
+template <int N, int M> Vec3field<N, M> operator*(const Vec3field<N, M> &a, double f) {
     Vec3field<N, M> res;
 
     for (int i = 0; i < N * M; ++i) {
@@ -136,7 +136,7 @@ template <int d = 2> struct Nabla {};
 
 struct Laplassian {};
 
-template <int N, int M> Vec3field<N, M> operator*(Nabla<2> n, const floatfield<N, M> &f) {
+template <int N, int M> Vec3field<N, M> operator*(Nabla<2> n, const doublefield<N, M> &f) {
     Vec3field<N, M> res;
 
     for (int i = 1; i < N - 1; ++i) {
@@ -149,8 +149,8 @@ template <int N, int M> Vec3field<N, M> operator*(Nabla<2> n, const floatfield<N
     return res;
 }
 
-template <int N, int M> floatfield<N, M> operator*(Nabla<2> n, const Vec3field<N, M> &f) {
-    floatfield<N, M> res;
+template <int N, int M> doublefield<N, M> operator*(Nabla<2> n, const Vec3field<N, M> &f) {
+    doublefield<N, M> res;
 
     for (int i = 1; i < N - 1; ++i) {
         for (int j = 1; j < M - 1; ++j) {
@@ -189,6 +189,6 @@ template <int N, int M> Vec3field<N, M> operator*(x_Nabla_x<2> n, const Vec3fiel
 }
 
 struct config_fluid {
-    float nu;
-    float eta;
+    double nu;
+    double eta;
 };

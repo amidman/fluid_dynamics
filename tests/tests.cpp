@@ -96,8 +96,8 @@ TEST(type_tests, vec3_div_double){
     EXPECT_EQ(res[2],7);
 }
 
-TEST(type_tests, floatfield) {
-    floatfield<10, 10> F;
+TEST(type_tests, doublefield) {
+    doublefield<10, 10> F;
     for (int i = 0; i < 100; i++) {
         F.f[i] = i;
     }
@@ -107,33 +107,33 @@ TEST(type_tests, floatfield) {
     EXPECT_EQ(F.f[70], 70);
 }
 
-TEST(type_tests, floatfield_sum) {
-    floatfield<10, 10> A;
+TEST(type_tests, doublefield_sum) {
+    doublefield<10, 10> A;
     for (int i = 0; i < 100; i++) {
         A.f[i] = i;
     }
 
-    floatfield<10, 10> B;
+    doublefield<10, 10> B;
     for (int i = 0; i < 100; i++) {
         B.f[i] = i;
     }
 
-    floatfield<10, 10> F = A + B;
+    doublefield<10, 10> F = A + B;
 
     EXPECT_EQ(F.f[0], 0);
     EXPECT_EQ(F.f[5], 10);
     EXPECT_EQ(F.f[70], 140);
 }
 
-TEST(type_tests, floatfield_mult_float) {
-    floatfield<10, 10> A;
+TEST(type_tests, doublefield_mult_double) {
+    doublefield<10, 10> A;
     for (int i = 0; i < 100; i++) {
         A.f[i] = i;
     }
 
-    float f = 5;
+    double f = 5;
 
-    floatfield<10, 10> F = A * f;
+    doublefield<10, 10> F = A * f;
 
     EXPECT_EQ(F.f[0], 0);
     EXPECT_EQ(F.f[5], 25);
@@ -183,7 +183,6 @@ TEST(type_tests, Vec3field_sum) {
     EXPECT_EQ(F.F[5].a[2], 14);
 }
 
-
 TEST(type_tests, Vec3field_mult_Vec3field) {
     Vec3field<10, 10> A;
     for (int i = 0; i < 100; i++) {
@@ -211,7 +210,7 @@ TEST(type_tests, Vec3field_mult_Vec3field) {
 }
 
 
-TEST(type_tests, Vec3field_mult_float) {
+TEST(type_tests, Vec3field_mult_double) {
     Vec3field<10, 10> A;
     for (int i = 0; i < 100; i++) {
         A.F[i].a[0] = i + 0;
@@ -219,7 +218,7 @@ TEST(type_tests, Vec3field_mult_float) {
         A.F[i].a[2] = i + 2;
     }
 
-    float f = 5;
+    double f = 5;
 
     Vec3field<10, 10> F = A * f;
 
@@ -233,7 +232,7 @@ TEST(type_tests, Vec3field_mult_float) {
 }
 
 TEST(Nabla_tests, gradient) {
-    floatfield<10, 10> f;
+    doublefield<10, 10> f;
 
     for (int i = 0; i < 10; i++) {
         for (int j = 0; j < 10; j++) {
@@ -265,7 +264,7 @@ TEST(Nabla_tests, div) {
 
     Nabla n;
 
-    floatfield grad = n * F;
+    doublefield grad = n * F;
 
     EXPECT_EQ(grad.f[11], 2);
     EXPECT_EQ(grad.f[55], 2);
@@ -291,6 +290,11 @@ TEST(Laplassian_tests, laplassian) {
 
     EXPECT_EQ(lap.F[55].a[0], 0);
     EXPECT_EQ(lap.F[55].a[1], 0);
+}
+
+TEST(solver, solver){
+    Solver<50,50> solver = Solver<50, 50>();
+    
 }
 
 int main(int argc, char **argv) {
