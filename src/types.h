@@ -1,5 +1,7 @@
 #pragma once
 
+template <int N, int M> inline int index(int i, int j) { return i + j * N; }
+
 struct Vec3 {
     double a[3] = {0};
 
@@ -103,7 +105,7 @@ template <int N, int M> struct doublefield {
     doublefield() { f = new double[N * M]; }
     ~doublefield() { delete[] f; }
 
-// Конструктор копирования
+    // Конструктор копирования
     doublefield(const doublefield &other) {
         f = new double[N * M];
         for (int i = 0; i < N * M; ++i) {
@@ -123,7 +125,7 @@ template <int N, int M> struct doublefield {
             return *this;
 
         double *tmp_double = new double[N * M];
-        
+
         for (int i = 0; i < N * M; ++i) {
             tmp_double[i] = other.f[i];
         }
@@ -162,6 +164,16 @@ template <int N, int M> doublefield<N, M> operator*(const doublefield<N, M> &a, 
 
     for (int i = 0; i < N * M; ++i) {
         res[i] = a[i] * f;
+    }
+
+    return res;
+}
+
+template <int N, int M> doublefield<N, M> operator/(const doublefield<N, M> &a, double f) {
+    doublefield<N, M> res;
+
+    for (int i = 0; i < N * M; ++i) {
+        res[i] = a[i] / f;
     }
 
     return res;
@@ -229,6 +241,26 @@ template <int N, int M> Vec3field<N, M> operator*(const Vec3field<N, M> &a, doub
     return res;
 }
 
+template <int N, int M> Vec3field<N, M> operator/(const Vec3field<N, M> &a, double f) {
+    Vec3field<N, M> res;
+
+    for (int i = 0; i < N * M; ++i) {
+        res[i] = a[i] / f;
+    }
+
+    return res;
+}
+
+template <int N, int M> Vec3field<N, M> operator/(const Vec3field<N, M> &a, const doublefield<N, M> &f) {
+    Vec3field<N, M> res;
+
+    for (int i = 0; i < N * M; ++i) {
+        res[i] = a[i] / f[i];
+    }
+
+    return res;
+}
+
 template <int N, int M> Vec3field<N, M> operator+(const Vec3field<N, M> &a, const Vec3field<N, M> &b) {
     Vec3field<N, M> res;
 
@@ -253,6 +285,20 @@ template <int d = 2> struct Nabla {};
 
 struct Laplassian {};
 
+template <int N, int M> Vec3field<N, M> operator*(Nabla<1> n, const doublefield<N, M> &f) {
+    Vec3field<N, M> res;
+
+    for (int i = 0; i < N - 1; ++i) {
+        for (int j = 0; j < M - 1; ++j) {
+            res[i + j * N][0] = (f[i + 1 + j * N] - f[i + j * N]);
+            res[i + j * N][1] = (f[i + (j + 1) * N] - f[i + (j)*N]);
+            res[i + j * N][2] = 0;
+        }
+    }
+
+    return res;
+}
+
 template <int N, int M> Vec3field<N, M> operator*(Nabla<2> n, const doublefield<N, M> &f) {
     Vec3field<N, M> res;
 
@@ -261,6 +307,18 @@ template <int N, int M> Vec3field<N, M> operator*(Nabla<2> n, const doublefield<
             res[i + j * N][0] = (f[i + 1 + j * N] - f[i - 1 + j * N]) / 2;
             res[i + j * N][1] = (f[i + (j + 1) * N] - f[i + (j - 1) * N]) / 2;
             res[i + j * N][2] = 0;
+        }
+    }
+
+    return res;
+}
+
+template <int N, int M> doublefield<N, M> operator*(Nabla<1> n, const Vec3field<N, M> &f) {
+    doublefield<N, M> res;
+
+    for (int i = 0; i < N - 1; ++i) {
+        for (int j = 0; j < M - 1; ++j) {
+            res[i + j * N] = (f[i + 1 + j * N][0] - f[i + j * N][0]) / 2 + (f[i + (j + 1) * N][1] - f[i + (j)*N][1]) / 2;
         }
     }
     return res;
@@ -291,6 +349,19 @@ template <int N, int M> Vec3field<N, M> operator*(Laplassian n, const Vec3field<
 }
 
 template <int d = 2> struct x_Nabla_x {};
+
+template <int N, int M> Vec3field<N, M> operator*(x_Nabla_x<1> n, const Vec3field<N, M> &F) {
+    Vec3field<N, M> res;
+
+    for (int i = 0; i < N - 1; ++i) {
+        for (int j = 0; j < M - 1; ++j) {
+            res[i + j * N][0] = F[i + j * N][0] * (F[i + 1 + j * N][0] - F[i + j * N][0]) + F[i + j * N][1] * (F[i + (j + 1) * N][0] - F[i + (j)*N][0]);
+            res[i + j * N][1] = F[i + j * N][0] * (F[i + 1 + j * N][1] - F[i + j * N][1]) + F[i + j * N][1] * (F[i + (j + 1) * N][1] - F[i + (j)*N][1]);
+            res[i + j * N][2] = 0;
+        }
+    }
+    return res;
+}
 
 template <int N, int M> Vec3field<N, M> operator*(x_Nabla_x<2> n, const Vec3field<N, M> &F) {
     Vec3field<N, M> res;

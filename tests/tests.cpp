@@ -6,6 +6,7 @@
 #include "../src/solver.h"
 #include "../src/types.h"
 #include "gtest/gtest.h"
+#include <string>
 
 TEST(type_tests, Vec3_indices_access) {
     Vec3 a;
@@ -313,27 +314,60 @@ TEST(Laplassian_tests, x_N_x) {
     EXPECT_EQ(lap.F[55].a[1], 20);
 }
 
-TEST(solver, solver) {
-    Solver<1000, 1000> solver = Solver<1000, 1000>();
-
-    solver.set_all_P(1e5);
-    solver.set_all_ro(1);
-    Vec3 v = {0, 0, 0};
-    solver.set_all_V(v);
-
-    solver.solve_step();
-}
-
 TEST(saver, save_doublefield) {
     doublefield<10, 10> f;
 
     for (int i = 0; i < 10; i++) {
         for (int j = 0; j < 10; j++) {
-            f.f[i + j * 10] = i+j;
+            f.f[i + j * 10] = i + j;
         }
     }
 
     save_doublefield(f, "test");
+}
+
+TEST(Nabla_tests, gradient_save) {
+    doublefield<10, 10> f;
+
+    for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 10; j++) {
+            f.f[i + j * 10] = i;
+        }
+    }
+
+    Nabla n;
+
+    Vec3field grad = n * f;
+
+    save_P_ro_V(f, f, grad, "grad.bin");
+}
+
+TEST(solver, solver) {
+    Solver<100, 100> solver = Solver<100, 100>();
+
+    solver.set_all_P(1e5);
+    solver.set_all_ro(1);
+    Vec3 v = {0, 0, 0};
+    solver.set_all_V(v);
+    Vec3 g = {0, 9.810, 0};
+    solver.add_gravity(g);
+
+    for (int i = 0; i < 100; ++i) {
+        for (int j = 100 / 2; j < 100 - 1; ++j) {
+            solver.ro[0][i + j * 100] = 0.1;
+            solver.ro[1][i + j * 100] = 0.1;
+        }
+    }
+
+    // save_doublefield(solver.P[0], "0.bin");
+    save_P_ro_V(solver.P[0], solver.ro[0], solver.V[0], "0.bin");
+
+    for (int i = 0; i < 100; i++) {
+        for (int j = 0; j < 100; j++) {
+            solver.solve_step();
+        }
+        save_P_ro_V(solver.P[0], solver.ro[0], solver.V[0], std::to_string(i + 1) + ".bin");
+    }
 }
 
 int main(int argc, char **argv) {
