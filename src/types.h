@@ -280,7 +280,7 @@ template <int N, int M> doublefield<N, M> operator*(Nabla<2> n, const Vec3field<
 template <int N, int M> Vec3field<N, M> operator*(Laplassian n, const Vec3field<N, M> &F) {
     Vec3field<N, M> res;
 
-    for (int i = 1; i < N - 1; ++i) {
+    for (long int i = 1; i < N - 1; ++i) {
         for (int j = 1; j < M - 1; ++j) {
             res[i + j * N][0] = (F[i + 1 + j * N][0] + F[i - 1 + j * N][0] - 2 * F[i + j * N][0]) + (F[i + (j + 1) * N][0] + F[i + (j - 1) * N][0] - 2 * F[i + j * N][0]);
             res[i + j * N][1] = (F[i + 1 + j * N][1] + F[i - 1 + j * N][1] - 2 * F[i + j * N][1]) + (F[i + (j + 1) * N][1] + F[i + (j - 1) * N][1] - 2 * F[i + j * N][1]);

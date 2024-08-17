@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 
+#include "../src/saver.h"
 #include "../src/solver.h"
 #include "../src/types.h"
 #include "gtest/gtest.h"
@@ -312,9 +313,27 @@ TEST(Laplassian_tests, x_N_x) {
     EXPECT_EQ(lap.F[55].a[1], 20);
 }
 
-TEST(solver, solver) { 
-    Solver<20, 20> solver = Solver<20, 20>();
+TEST(solver, solver) {
+    Solver<1000, 1000> solver = Solver<1000, 1000>();
+
+    solver.set_all_P(1e5);
+    solver.set_all_ro(1);
+    Vec3 v = {0, 0, 0};
+    solver.set_all_V(v);
+
     solver.solve_step();
+}
+
+TEST(saver, save_doublefield) {
+    doublefield<10, 10> f;
+
+    for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 10; j++) {
+            f.f[i + j * 10] = i+j;
+        }
+    }
+
+    save_doublefield(f, "test");
 }
 
 int main(int argc, char **argv) {
