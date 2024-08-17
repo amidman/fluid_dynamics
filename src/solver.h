@@ -21,7 +21,7 @@ template <int N, int M> class Solver {
         double nu = 1e-6;
         double eta = 1e-9;
 
-        V_new = V_old + (lap * V_old * nu + nabla * (nabla * V_old) * (eta + nu / 3) - nabla * P_old - x_n_x * V_old) * tau;
-        ro_new = ro_old - (nabla*(ro_old*V_old))*tau;
+        // V_new = V_old + (lap * V_old * nu + nabla * (nabla * V_old) * (eta + nu / 3) - nabla * P_old - x_n_x * V_old) * tau;
+        // ro_new = ro_old - (nabla*(ro_old*V_old))*tau;
     }
 };

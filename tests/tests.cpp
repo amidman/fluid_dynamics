@@ -11,11 +11,9 @@ TEST(type_tests, Vec3_indices_access) {
     a[0] = 1;
     a[1] = 1;
     a[2] = 1;
-
 }
 
-
-TEST(type_tests, vec3_sum){
+TEST(type_tests, vec3_sum) {
     Vec3 a;
     a[0] = 1;
     a[1] = 2;
@@ -26,14 +24,14 @@ TEST(type_tests, vec3_sum){
     b[1] = 5;
     b[2] = 6;
 
-    Vec3 res = a+b;
+    Vec3 res = a + b;
 
-    EXPECT_EQ(res[0],5);
-    EXPECT_EQ(res[1],7);
-    EXPECT_EQ(res[2],9);
+    EXPECT_EQ(res[0], 5);
+    EXPECT_EQ(res[1], 7);
+    EXPECT_EQ(res[2], 9);
 }
 
-TEST(type_tests, vec3_substract){
+TEST(type_tests, vec3_substract) {
     Vec3 a;
     a[0] = 1;
     a[1] = 2;
@@ -44,14 +42,14 @@ TEST(type_tests, vec3_substract){
     b[1] = 5;
     b[2] = 6;
 
-    Vec3 res = b-a;
+    Vec3 res = b - a;
 
-    EXPECT_EQ(res[0],3);
-    EXPECT_EQ(res[1],3);
-    EXPECT_EQ(res[2],3);
+    EXPECT_EQ(res[0], 3);
+    EXPECT_EQ(res[1], 3);
+    EXPECT_EQ(res[2], 3);
 }
 
-TEST(type_tests, vec3_mult_double){
+TEST(type_tests, vec3_mult_double) {
     Vec3 a;
     a[0] = 1;
     a[1] = 2;
@@ -59,14 +57,14 @@ TEST(type_tests, vec3_mult_double){
 
     double b = 2;
 
-    Vec3 res = a*b;
+    Vec3 res = a * b;
 
-    EXPECT_EQ(res[0],2);
-    EXPECT_EQ(res[1],4);
-    EXPECT_EQ(res[2],6);
+    EXPECT_EQ(res[0], 2);
+    EXPECT_EQ(res[1], 4);
+    EXPECT_EQ(res[2], 6);
 }
 
-TEST(type_tests, double_mult_vec3){
+TEST(type_tests, double_mult_vec3) {
     Vec3 a;
     a[0] = 1;
     a[1] = 2;
@@ -74,14 +72,14 @@ TEST(type_tests, double_mult_vec3){
 
     double b = 2;
 
-    Vec3 res = b*a;
+    Vec3 res = b * a;
 
-    EXPECT_EQ(res[0],2);
-    EXPECT_EQ(res[1],4);
-    EXPECT_EQ(res[2],6);
+    EXPECT_EQ(res[0], 2);
+    EXPECT_EQ(res[1], 4);
+    EXPECT_EQ(res[2], 6);
 }
 
-TEST(type_tests, vec3_div_double){
+TEST(type_tests, vec3_div_double) {
     Vec3 a;
     a[0] = 10;
     a[1] = 12;
@@ -89,11 +87,11 @@ TEST(type_tests, vec3_div_double){
 
     double b = 2;
 
-    Vec3 res = a/b;
+    Vec3 res = a / b;
 
-    EXPECT_EQ(res[0],5);
-    EXPECT_EQ(res[1],6);
-    EXPECT_EQ(res[2],7);
+    EXPECT_EQ(res[0], 5);
+    EXPECT_EQ(res[1], 6);
+    EXPECT_EQ(res[2], 7);
 }
 
 TEST(type_tests, doublefield) {
@@ -172,7 +170,8 @@ TEST(type_tests, Vec3field_sum) {
         B.F[i].a[2] = i + 2;
     }
 
-    Vec3field<10, 10> F = A + B;
+    Vec3field<10, 10> F;
+    F = A + B;
 
     EXPECT_EQ(F.F[0].a[0], 0);
     EXPECT_EQ(F.F[0].a[1], 2);
@@ -208,7 +207,6 @@ TEST(type_tests, Vec3field_mult_Vec3field) {
     EXPECT_EQ(F.F[5].a[1], 36);
     EXPECT_EQ(F.F[5].a[2], 49);
 }
-
 
 TEST(type_tests, Vec3field_mult_double) {
     Vec3field<10, 10> A;
@@ -292,9 +290,31 @@ TEST(Laplassian_tests, laplassian) {
     EXPECT_EQ(lap.F[55].a[1], 0);
 }
 
-TEST(solver, solver){
-    Solver<50,50> solver = Solver<50, 50>();
-    
+TEST(Laplassian_tests, x_N_x) {
+    Vec3field<10, 10> F;
+
+    for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 10; j++) {
+            F.F[i + j * 10].a[0] = i + j;
+            F.F[i + j * 10].a[1] = i + j;
+            F.F[i + j * 10].a[2] = i + j;
+        }
+    }
+
+    x_Nabla_x x_n_x;
+
+    Vec3field lap = x_n_x * F;
+
+    EXPECT_EQ(lap.F[11].a[0], 4);
+    EXPECT_EQ(lap.F[11].a[1], 4);
+
+    EXPECT_EQ(lap.F[55].a[0], 20);
+    EXPECT_EQ(lap.F[55].a[1], 20);
+}
+
+TEST(solver, solver) { 
+    Solver<20, 20> solver = Solver<20, 20>();
+    solver.solve_step();
 }
 
 int main(int argc, char **argv) {
