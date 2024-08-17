@@ -88,7 +88,7 @@ template <int N, int M> class Solver {
 
         for (int i = 0; i < N; ++i) {
             for (int j = M / 2; j < M - 1; ++j) {
-                P[idx][i + j * N] = 1e4;
+                // P[idx][i + j * N] = 1e5 + (50-j) * 2000;
             }
         }
     }
@@ -118,8 +118,8 @@ template <int N, int M> class Solver {
         // ro[idxn] = ro[idxp] - (nabla * (ro[idxp] * V[idxp])) * tau / h;
         // P[idxn] = calc_P(ro[idxn]);
 
-        V[idxn] = V[idxp] + (F - nabla * P[idxp] / h / ro[idxp]) * tau;
-        ro[idxn] = ro[idxp] - (nabla * (ro[idxp] * V[idxp])) * tau / h;
+        V[idxn] = V[idxp] - (F - nabla * P[idxp] / h / ro[idxp]) * tau;
+        ro[idxn] = ro[idxp] - (nabla * (ro[idxp] * V[idxn])) * tau / h;
         P[idxn] = calc_P(ro[idxn]);
 
         boundary_conditions(idxn);

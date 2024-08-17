@@ -349,21 +349,23 @@ TEST(solver, solver) {
     solver.set_all_ro(1);
     Vec3 v = {0, 0, 0};
     solver.set_all_V(v);
-    Vec3 g = {0, 9.810, 0};
+    Vec3 g = {0, 0, 0};
     solver.add_gravity(g);
 
     for (int i = 0; i < 100; ++i) {
         for (int j = 100 / 2; j < 100 - 1; ++j) {
-            solver.ro[0][i + j * 100] = 0.1;
-            solver.ro[1][i + j * 100] = 0.1;
+            solver.P[0][i + j * 100] = 1e5 + (50 - j) * 2000;
+            solver.P[1][i + j * 100] = 1e5 + (50 - j) * 2000;
+            solver.ro[0][i + j * 100] = (1e5 + (50 - j) * 2000)/1e5;
+            solver.ro[1][i + j * 100] = (1e5 + (50 - j) * 2000)/1e5;
         }
     }
 
     // save_doublefield(solver.P[0], "0.bin");
     save_P_ro_V(solver.P[0], solver.ro[0], solver.V[0], "0.bin");
 
-    for (int i = 0; i < 100; i++) {
-        for (int j = 0; j < 100; j++) {
+    for (int i = 0; i < 20; i++) {
+        for (int j = 0; j < 1000; j++) {
             solver.solve_step();
         }
         save_P_ro_V(solver.P[0], solver.ro[0], solver.V[0], std::to_string(i + 1) + ".bin");

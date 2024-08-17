@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import struct
 
-with open("./build/15.bin", mode='rb') as file: # b is important -> binary
+with open("./build/8.bin", mode='rb') as file: # b is important -> binary
     fileContent = file.read()
 
 N,M = struct.unpack("ii", fileContent[:8])
@@ -11,6 +11,7 @@ N,M = struct.unpack("ii", fileContent[:8])
 data = np.array(struct.unpack("d"*N*M*4, fileContent[8:])).reshape((N,M,4))
 
 print(N,M)
+print(data[:,:,2])
 
 fig, ax = plt.subplots()
 
