@@ -54,13 +54,13 @@ template <int N, int M> class Solver {
             V[idx][i] = zero;
         }
 
-        for (int i = 1; i < N - 1; ++i) {
-            // P[idx][i + N * (M - 1)] = P[idx][i + N * (M - 2)];
-            // ro[idx][i + N * (M - 1)] = ro[idx][i + N * (M - 2)];
+        for (int i = 0; i < N; ++i) {
+            P[idx][i + N * (M - 1)] = P[idx][i + N * (M - 2)];
+            ro[idx][i + N * (M - 1)] = ro[idx][i + N * (M - 2)];
+            V[idx][i + N * (M - 1)] = V[idx][i + N * (M - 2)];
+            // P[idx][i + N * (M - 1)] = 1e5;
+            // ro[idx][i + N * (M - 1)] = 1;
             // V[idx][i + N * (M - 1)] = zero;
-            P[idx][i + N * (M - 1)] = 1e5;
-            ro[idx][i + N * (M - 1)] = 1;
-            V[idx][i + N * (M - 1)] = zero;
         }
 
         for (int j = 1; j < M - 1; ++j) {
@@ -69,16 +69,17 @@ template <int N, int M> class Solver {
             // V[idx][j * N] = zero;
             P[idx][j * N] = 1e5;
             ro[idx][j * N] = 1;
-            V[idx][j * N] = zero;
+            // V[idx][j * N] = zero;
         }
 
-        for (int j = 1; j < M - 1; ++j) {
+        for (int j = 1; j < M; ++j) {
             // P[idx][j * N + N - 1] = P[idx][j * N + N - 2];
             // ro[idx][j * N + N - 1] = ro[idx][j * N + N - 2];
             // V[idx][j * N + N - 1] = zero;
-            P[idx][j * N + N - 1] = 1e5;
-            ro[idx][j * N + N - 1] = 1;
-            V[idx][j * N + N - 1] = zero;
+            P[idx][j * N + N - 1] = 1.00001e5;
+            ro[idx][j * N + N - 1] = 1.00001;
+            // Vec3 v_ = {-10,0,0};
+            // V[idx][j * N + N - 1] = v_;
         }
 
         P[idx][0] = (P[idx][1] + P[idx][N]) / 2;
@@ -89,23 +90,27 @@ template <int N, int M> class Solver {
         ro[idx][N - 1] = (ro[idx][N - 2] + ro[idx][N - 1 + N]) / 2;
         V[idx][N - 1] = zero;
 
-        P[idx][(M - 1) * N] = (P[idx][(M - 1) * N + 1] + P[idx][(M - 2) * N]) / 2;
-        ro[idx][(M - 1) * N] = (ro[idx][(M - 1) * N + 1] + ro[idx][(M - 2) * N]) / 2;
-        V[idx][(M - 1) * N] = zero;
+        // P[idx][(M - 1) * N] = (P[idx][(M - 1) * N + 1] + P[idx][(M - 2) * N]) / 2;
+        // ro[idx][(M - 1) * N] = (ro[idx][(M - 1) * N + 1] + ro[idx][(M - 2) * N]) / 2;
+        // V[idx][(M - 1) * N] = zero;
 
-        P[idx][M * N - 1] = (P[idx][M * N - 2] + P[idx][(M - 1) * N - 1]) / 2;
-        ro[idx][M * N - 1] = (ro[idx][M * N - 2] + ro[idx][(M - 1) * N - 1]) / 2;
-        V[idx][M * N - 1] = zero;
+        // P[idx][M * N - 1] = (P[idx][M * N - 2] + P[idx][(M - 1) * N - 1]) / 2;
+        // ro[idx][M * N - 1] = (ro[idx][M * N - 2] + ro[idx][(M - 1) * N - 1]) / 2;
+        // V[idx][M * N - 1] = zero;
 
-        P[idx][250 + 250 * 500] = 1e5 + 1e4 * sin((step_count) * 3.14159268 / (100));
-        ro[idx][250 + 250 * 500] = P[idx][250 + 250 * 500] / 1e5;
-        V[idx][250 + 250 * 500] = zero;
+        // P[idx][250 + 250 * 500] = 1e5 + 1e4 * sin((step_count) * 3.14159268 / (50));
+        // ro[idx][250 + 250 * 500] = P[idx][300 + 250 * 500] / 1e5;
+        // V[idx][250 + 250 * 500] = zero;
+        //
+        // P[idx][300 + 250 * 500] = 1e5 + 1e4 * sin((step_count) * 3.14159268 / (50));
+        // ro[idx][300 + 250 * 500] = P[idx][300 + 250 * 500] / 1e5;
+        // V[idx][300 + 250 * 500] = zero;
 
-        // for (int i = 0; i < N; ++i) {
-        //     for (int j = M / 2; j < M - 1; ++j) {
-        //         // P[idx][i + j * N] = 1e5 + (50-j) * 2000;
-        //     }
-        // }
+        //for (int i = 0; i < N; ++i) {
+        //    for (int j = 0; j < M; ++j) {
+        //        V[idx][i + j * N][1] = 0;
+        //    }
+        //}
     }
 
     doublefield<N, M> calc_P(doublefield<N, M> ro_) {
@@ -120,7 +125,7 @@ template <int N, int M> class Solver {
         Laplassian lap;
         x_Nabla_x x_n_x;
 
-        double tau = 1e-6;
+        double tau = 1e-9;
         double nu = 18e-6;
         double eta = 1e-12;
         double h = 1e-3;
@@ -134,8 +139,8 @@ template <int N, int M> class Solver {
         // ro[idxn] = ro[idxp] - (nabla * (ro[idxp] * V[idxp])) * tau / h;
         // P[idxn] = calc_P(ro[idxn]);
 
-        V[idxn] = V[idxp] + (F - nabla_r * P[idxp] / h / ro[idxp]) * tau;
-        V[idxp] = (V[idxp] + V[idxn] + (F - nabla_l * P[idxp] / h / ro[idxp]) * tau) / 2;
+        V[idxn] = V[idxp] + (F + (nabla_r * (nabla_r * V[idxp]) * (eta + nu / 3) / (h * h) + lap * V[idxp] * nu / (h * h) - nabla_r * P[idxp] / h) / ro[idxp]) * tau;
+        V[idxp] = (V[idxp] + V[idxn] + (F + (nabla_l * (nabla_l * V[idxn]) * (eta + nu / 3) / (h * h) + lap * V[idxn] * nu / (h * h) - nabla_l * P[idxp] / h) / ro[idxp]) * tau) / 2;
 
         ro[idxn] = ro[idxp] - (nabla_r * (ro[idxp] * V[idxp])) * tau / h;
         ro[idxp] = (ro[idxp] + ro[idxn] - (nabla_l * (ro[idxn] * V[idxp])) * tau / h) / 2;
@@ -146,8 +151,9 @@ template <int N, int M> class Solver {
         boundary_conditions(idxp);
         boundary_conditions(idxn);
 
-        save_P_ro_V(P[idxp], ro[idxp], V[idxp], "./saves/" + std::to_string(step_count) + ".bin");
-
+        //if ((step_count + 1) % 10) {
+            //save_P_ro_V(P[idxp], ro[idxp], V[idxp], "./saves/" + std::to_string(step_count) + ".bin");
+        //}
         step_count += 2;
     }
 };

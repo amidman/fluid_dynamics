@@ -347,7 +347,7 @@ TEST(Nabla_tests, gradient_save) {
 }
 
 TEST(solver, solver) {
-    Solver<500, 500> solver = Solver<500, 500>();
+    Solver<10, 10> solver = Solver<10, 10>();
 
     solver.set_all_P(1e5);
     solver.set_all_ro(1);
@@ -356,8 +356,8 @@ TEST(solver, solver) {
     Vec3 g = {0, 0, 0};
     solver.add_gravity(g);
 
-    for (int i = 0; i < 500; ++i) {
-        for (int j = 0; j < 500; ++j) {
+    for (int i = 0; i < 100; ++i) {
+        for (int j = 0; j < 100; ++j) {
             // solver.P[0][i + j * 100] = 1e5 + 1e4 * sin(5 * (i) * 3.14159268 / (100));
             // solver.P[1][i + j * 100] = 1e5 + 1e4 * sin(5 * (i) * 3.14159268 / (100));
             //
@@ -372,12 +372,15 @@ TEST(solver, solver) {
     // save_doublefield(solver.P[0], "0.bin");
     save_P_ro_V(solver.P[0], solver.ro[0], solver.V[0], "./saves/0.bin");
 
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < 1000000; i++) {
         // for (int j = 0; j < 1000; j++) {
         solver.solve_step();
 
         //}
     }
+    save_P_ro_V(solver.P[0], solver.ro[0], solver.V[0], "./saves/final_0.bin");
+    save_P_ro_V(solver.P[1], solver.ro[1], solver.V[1], "./saves/final_1.bin");
+
 }
 
 int main(int argc, char **argv) {

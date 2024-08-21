@@ -8,33 +8,33 @@ def open_bin(file_name):
         fileContent = file.read()
 
     N,M = struct.unpack("ii", fileContent[:8])
-
+    print(N,M)
     #data = np.array(struct.unpack("d"*N*M, fileContent[8:])).reshape((N, M))
-    data = np.array(struct.unpack("d"*N*M*4, fileContent[8:])).reshape((N,M,4))
+    data = np.array(struct.unpack("d"*N*M*4, fileContent[8:])).reshape((M,N,4))
     return data
 
 fig1, ax1 = plt.subplots()
 #fig2, ax2 = plt.subplots()
 
 
-x = np.arange(0, 500, 1)
-y = np.arange(0, 500, 1)
+x = np.arange(0, 10, 1)
+y = np.arange(0, 10, 1)
 
 Y, X = np.meshgrid(x, y, indexing='ij')
 
-#ax1.plot(open_bin("./saves/141.bin")[10,:,0])
-#ax1.plot(open_bin("./saves/151.bin")[10,:,0])
-#ax1.plot(open_bin("./saves/161.bin")[10,:,0])
-#ax1.plot(open_bin("./saves/171.bin")[10,:,0])
-#ax1.plot(open_bin("./saves/181.bin")[10,:,0])
-#ax1.plot(open_bin("./saves/191.bin")[10,:,0])
+#ax1.plot(open_bin("./saves/3333.bin")[5,:,0])
+#ax1.plot(open_bin("./saves/6667.bin")[5,:,0])
+#ax1.plot(open_bin("./saves/9999.bin")[5,:,0])
+#ax1.plot(open_bin("./saves/13333.bin")[5,:,0])
+#ax1.plot(open_bin("./saves/16667.bin")[5,:,0])
+#ax1.plot(open_bin("./saves/19999.bin")[5,:,0])
 
-data = open_bin("./saves/1001.bin")
+data = open_bin("./saves/final_1.bin")
 
-print(data[:,:,2])
+print(data[:,:,0])
 
-ax1.imshow(data[:,:,0], aspect='auto', interpolation='bicubic')
-#ax1.quiver(X, Y, data[:,:,2], -data[:,:,3])
+ax1.imshow(data[:,:,0], aspect='auto')
+ax1.quiver(X, Y, data[:,:,2], -data[:,:,3])
 #
 #ax2.imshow(data[:,:,1], aspect='auto')
 #ax2.quiver(X, Y, data[:,:,2], -data[:,:,3])
