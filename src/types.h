@@ -281,17 +281,19 @@ template <int N, int M> Vec3field<N, M> operator-(const Vec3field<N, M> &a, cons
     return res;
 }
 
-template <int d = 2> struct Nabla {};
+enum NablaId { FIRST_DEGREE_LEFT, FIRST_DEGREE_RIGHT, SECOND_DEGREE };
+
+template <NablaId> struct Nabla {};
 
 struct Laplassian {};
 
-template <int N, int M> Vec3field<N, M> operator*(Nabla<1> n, const doublefield<N, M> &f) {
+template <int N, int M> Vec3field<N, M> operator*(Nabla<FIRST_DEGREE_RIGHT> n, const doublefield<N, M> &f) {
     Vec3field<N, M> res;
 
     for (int i = 0; i < N - 1; ++i) {
         for (int j = 0; j < M - 1; ++j) {
             res[i + j * N][0] = (f[i + 1 + j * N] - f[i + j * N]);
-            res[i + j * N][1] = (f[i + (j + 1) * N] - f[i + (j)*N]);
+            res[i + j * N][1] = -(f[i + (j + 1) * N] - f[i + (j)*N]);
             res[i + j * N][2] = 0;
         }
     }
@@ -299,13 +301,27 @@ template <int N, int M> Vec3field<N, M> operator*(Nabla<1> n, const doublefield<
     return res;
 }
 
-template <int N, int M> Vec3field<N, M> operator*(Nabla<2> n, const doublefield<N, M> &f) {
+template <int N, int M> Vec3field<N, M> operator*(Nabla<FIRST_DEGREE_LEFT> n, const doublefield<N, M> &f) {
+    Vec3field<N, M> res;
+
+    for (int i = 1; i < N; ++i) {
+        for (int j = 1; j < M; ++j) {
+            res[i + j * N][0] = (f[i + j * N] - f[i - 1 + j * N]);
+            res[i + j * N][1] = -(f[i + (j)*N] - f[i + (j - 1) * N]);
+            res[i + j * N][2] = 0;
+        }
+    }
+
+    return res;
+}
+
+template <int N, int M> Vec3field<N, M> operator*(Nabla<SECOND_DEGREE> n, const doublefield<N, M> &f) {
     Vec3field<N, M> res;
 
     for (int i = 1; i < N - 1; ++i) {
         for (int j = 1; j < M - 1; ++j) {
             res[i + j * N][0] = (f[i + 1 + j * N] - f[i - 1 + j * N]) / 2;
-            res[i + j * N][1] = (f[i + (j + 1) * N] - f[i + (j - 1) * N]) / 2;
+            res[i + j * N][1] = (f[i + (j - 1) * N] - f[i + (j + 1) * N]) / 2;
             res[i + j * N][2] = 0;
         }
     }
@@ -313,23 +329,34 @@ template <int N, int M> Vec3field<N, M> operator*(Nabla<2> n, const doublefield<
     return res;
 }
 
-template <int N, int M> doublefield<N, M> operator*(Nabla<1> n, const Vec3field<N, M> &f) {
+template <int N, int M> doublefield<N, M> operator*(Nabla<FIRST_DEGREE_RIGHT> n, const Vec3field<N, M> &f) {
     doublefield<N, M> res;
 
     for (int i = 0; i < N - 1; ++i) {
         for (int j = 0; j < M - 1; ++j) {
-            res[i + j * N] = (f[i + 1 + j * N][0] - f[i + j * N][0]) / 2 + (f[i + (j + 1) * N][1] - f[i + (j)*N][1]) / 2;
+            res[i + j * N] = (f[i + 1 + j * N][0] - f[i + j * N][0]) + (f[i + (j + 1) * N][1] - f[i + (j)*N][1]);
         }
     }
     return res;
 }
 
-template <int N, int M> doublefield<N, M> operator*(Nabla<2> n, const Vec3field<N, M> &f) {
+template <int N, int M> doublefield<N, M> operator*(Nabla<FIRST_DEGREE_LEFT> n, const Vec3field<N, M> &f) {
+    doublefield<N, M> res;
+
+    for (int i = 1; i < N; ++i) {
+        for (int j = 1; j < M; ++j) {
+            res[i + j * N] = (f[i + j * N][0] - f[i - 1 + j * N][0]) + (f[i + (j)*N][1] - f[i + (j - 1) * N][1]);
+        }
+    }
+    return res;
+}
+
+template <int N, int M> doublefield<N, M> operator*(Nabla<SECOND_DEGREE> n, const Vec3field<N, M> &f) {
     doublefield<N, M> res;
 
     for (int i = 1; i < N - 1; ++i) {
         for (int j = 1; j < M - 1; ++j) {
-            res[i + j * N] = (f[i + 1 + j * N][0] - f[i - 1 + j * N][0]) / 2 + (f[i + (j + 1) * N][1] - f[i + (j - 1) * N][1]) / 2;
+            res[i + j * N] = (f[i + 1 + j * N][0] - f[i - 1 + j * N][0]) / 2 - (f[i + (j + 1) * N][1] - f[i + (j - 1) * N][1]) / 2;
         }
     }
     return res;

@@ -240,7 +240,7 @@ TEST(Nabla_tests, gradient) {
         }
     }
 
-    Nabla n;
+    Nabla<FIRST_DEGREE_RIGHT> n;
 
     Vec3field grad = n * f;
 
@@ -253,21 +253,25 @@ TEST(Nabla_tests, gradient) {
 
 TEST(Nabla_tests, div) {
     Vec3field<10, 10> F;
+    doublefield<10, 10> div;
 
     for (int i = 0; i < 10; i++) {
         for (int j = 0; j < 10; j++) {
-            F.F[i + j * 10].a[0] = i + j;
-            F.F[i + j * 10].a[1] = i + j;
-            F.F[i + j * 10].a[2] = i + j;
+            F.F[i + j * 10].a[0] = 0;
+            F.F[i + j * 10].a[1] = j * j * j;
+            F.F[i + j * 10].a[2] = 0;
+            div[i + j * 10] = i + j;
         }
     }
 
-    Nabla n;
+    Nabla<FIRST_DEGREE_RIGHT> n;
 
-    doublefield grad = n * F;
+    div = n * F;
 
-    EXPECT_EQ(grad.f[11], 2);
-    EXPECT_EQ(grad.f[55], 2);
+    save_P_ro_V(div, div, F, "div.bin");
+
+    EXPECT_EQ(div.f[11], 2);
+    EXPECT_EQ(div.f[55], 2);
 }
 
 TEST(Laplassian_tests, laplassian) {
@@ -335,7 +339,7 @@ TEST(Nabla_tests, gradient_save) {
         }
     }
 
-    Nabla n;
+    Nabla<FIRST_DEGREE_RIGHT> n;
 
     Vec3field grad = n * f;
 
@@ -353,22 +357,26 @@ TEST(solver, solver) {
     solver.add_gravity(g);
 
     for (int i = 0; i < 100; ++i) {
-        for (int j = 100 / 2; j < 100 - 1; ++j) {
-            solver.P[0][i + j * 100] = 1e5 + (50 - j) * 2000;
-            solver.P[1][i + j * 100] = 1e5 + (50 - j) * 2000;
-            solver.ro[0][i + j * 100] = (1e5 + (50 - j) * 2000)/1e5;
-            solver.ro[1][i + j * 100] = (1e5 + (50 - j) * 2000)/1e5;
+        for (int j = 0; j < 100; ++j) {
+            solver.P[0][i + j * 100] = 1e5 + 1e4 * sin(5 * (i) * 3.14159268 / (100));
+            solver.P[1][i + j * 100] = 1e5 + 1e4 * sin(5 * (i) * 3.14159268 / (100));
+
+            solver.ro[0][i + j * 100] = solver.P[0][i + j * 100] / 1e5;
+            solver.ro[1][i + j * 100] = solver.P[1][i + j * 100] / 1e5;
         }
     }
 
-    // save_doublefield(solver.P[0], "0.bin");
-    save_P_ro_V(solver.P[0], solver.ro[0], solver.V[0], "0.bin");
+    // solver.ro[0][50 + 50 * 100] = 2;
+    // solver.ro[1][50 + 50 * 100] = 2;
 
-    for (int i = 0; i < 20; i++) {
-        for (int j = 0; j < 1000; j++) {
-            solver.solve_step();
-        }
-        save_P_ro_V(solver.P[0], solver.ro[0], solver.V[0], std::to_string(i + 1) + ".bin");
+    // save_doublefield(solver.P[0], "0.bin");
+    save_P_ro_V(solver.P[0], solver.ro[0], solver.V[0], "./saves/0.bin");
+
+    for (int i = 0; i < 1000; i++) {
+        // for (int j = 0; j < 1000; j++) {
+        solver.solve_step();
+
+        //}
     }
 }
 
