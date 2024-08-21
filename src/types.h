@@ -293,7 +293,7 @@ template <int N, int M> Vec3field<N, M> operator*(Nabla<FIRST_DEGREE_RIGHT> n, c
     for (int i = 0; i < N - 1; ++i) {
         for (int j = 0; j < M - 1; ++j) {
             res[i + j * N][0] = (f[i + 1 + j * N] - f[i + j * N]);
-            res[i + j * N][1] = -(f[i + (j + 1) * N] - f[i + (j)*N]);
+            res[i + j * N][1] = (f[i + (j + 1) * N] - f[i + (j)*N]);
             res[i + j * N][2] = 0;
         }
     }
@@ -307,7 +307,7 @@ template <int N, int M> Vec3field<N, M> operator*(Nabla<FIRST_DEGREE_LEFT> n, co
     for (int i = 1; i < N; ++i) {
         for (int j = 1; j < M; ++j) {
             res[i + j * N][0] = (f[i + j * N] - f[i - 1 + j * N]);
-            res[i + j * N][1] = -(f[i + (j)*N] - f[i + (j - 1) * N]);
+            res[i + j * N][1] = (f[i + (j)*N] - f[i + (j - 1) * N]);
             res[i + j * N][2] = 0;
         }
     }

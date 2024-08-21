@@ -347,7 +347,7 @@ TEST(Nabla_tests, gradient_save) {
 }
 
 TEST(solver, solver) {
-    Solver<100, 100> solver = Solver<100, 100>();
+    Solver<500, 500> solver = Solver<500, 500>();
 
     solver.set_all_P(1e5);
     solver.set_all_ro(1);
@@ -356,13 +356,13 @@ TEST(solver, solver) {
     Vec3 g = {0, 0, 0};
     solver.add_gravity(g);
 
-    for (int i = 0; i < 100; ++i) {
-        for (int j = 0; j < 100; ++j) {
-            solver.P[0][i + j * 100] = 1e5 + 1e4 * sin(5 * (i) * 3.14159268 / (100));
-            solver.P[1][i + j * 100] = 1e5 + 1e4 * sin(5 * (i) * 3.14159268 / (100));
-
-            solver.ro[0][i + j * 100] = solver.P[0][i + j * 100] / 1e5;
-            solver.ro[1][i + j * 100] = solver.P[1][i + j * 100] / 1e5;
+    for (int i = 0; i < 500; ++i) {
+        for (int j = 0; j < 500; ++j) {
+            // solver.P[0][i + j * 100] = 1e5 + 1e4 * sin(5 * (i) * 3.14159268 / (100));
+            // solver.P[1][i + j * 100] = 1e5 + 1e4 * sin(5 * (i) * 3.14159268 / (100));
+            //
+            // solver.ro[0][i + j * 100] = solver.P[0][i + j * 100] / 1e5;
+            // solver.ro[1][i + j * 100] = solver.P[1][i + j * 100] / 1e5;
         }
     }
 

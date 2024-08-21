@@ -14,30 +14,29 @@ def open_bin(file_name):
     return data
 
 fig1, ax1 = plt.subplots()
-fig2, ax2 = plt.subplots()
+#fig2, ax2 = plt.subplots()
 
 
-x = np.arange(0, 100, 1)
-y = np.arange(0, 100, 1)
+x = np.arange(0, 500, 1)
+y = np.arange(0, 500, 1)
 
 Y, X = np.meshgrid(x, y, indexing='ij')
 
-#ax.plot(open_bin("./saves/100.bin")[10,:,1])
-#ax.plot(open_bin("./saves/200.bin")[10,:,1])
-#ax.plot(open_bin("./saves/500.bin")[10,:,1])
-#ax.plot(open_bin("./saves/1000.bin")[10,:,1])
-#ax.plot(open_bin("./saves/1500.bin")[10,:,1])
-#ax.plot(open_bin("./saves/2000.bin")[10,:,1])
+#ax1.plot(open_bin("./saves/141.bin")[10,:,0])
+#ax1.plot(open_bin("./saves/151.bin")[10,:,0])
+#ax1.plot(open_bin("./saves/161.bin")[10,:,0])
+#ax1.plot(open_bin("./saves/171.bin")[10,:,0])
+#ax1.plot(open_bin("./saves/181.bin")[10,:,0])
+#ax1.plot(open_bin("./saves/191.bin")[10,:,0])
 
-data = open_bin("./saves/2.bin")
+data = open_bin("./saves/1001.bin")
 
 print(data[:,:,2])
 
-ax1.imshow(data[:,:,0], aspect='auto')
-#ax.streamplot(X, Y, data[:,:,2], data[:,:,3], density=10)
-ax1.quiver(X, Y, data[:,:,2], -data[:,:,3])
-
-ax2.imshow(data[:,:,1], aspect='auto')
-ax2.quiver(X, Y, data[:,:,2], -data[:,:,3])
+ax1.imshow(data[:,:,0], aspect='auto', interpolation='bicubic')
+#ax1.quiver(X, Y, data[:,:,2], -data[:,:,3])
+#
+#ax2.imshow(data[:,:,1], aspect='auto')
+#ax2.quiver(X, Y, data[:,:,2], -data[:,:,3])
 
 plt.show()
